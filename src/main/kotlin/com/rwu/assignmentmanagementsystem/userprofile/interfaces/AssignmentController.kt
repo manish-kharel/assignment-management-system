@@ -1,8 +1,8 @@
 package com.rwu.assignmentmanagementsystem.userprofile.interfaces
 
-import com.rwu.assignmentmanagementsystem.FRONTEND_DATE_FORMAT
 import com.rwu.assignmentmanagementsystem.userprofile.application.AssignmentService
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Assignment
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.converter.AssignmentConverter
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionResponse
@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @CrossOrigin
 class AssignmentController(
-  private val assignmentService: AssignmentService
+  private val assignmentService: AssignmentService,
+  private val assignmentConverter: AssignmentConverter
 ) {
   //For professors page
   // 1. to upload assignment
@@ -42,14 +43,8 @@ class AssignmentController(
   @PostMapping("createSubmission")
   fun createSubmission(
     @RequestBody submissionRequest: SubmissionRequest
-  ) = assignmentService.createSubmissionForStudent(submissionRequest).let { submitted ->
-    SubmissionResponse(
-      fileName = submitted.fileName,
-      assignmentId = submitted.assignment.id,
-      assignmentName = submitted.assignment.file,
-      studentName = submitted.student.name,
-      submittedOn = submitted.submittedOn.format(FRONTEND_DATE_FORMAT)
-    )
+  ): SubmissionResponse = assignmentService.createSubmissionForStudent(submissionRequest).let { submitted ->
+    assignmentConverter.convertSubmissionDtoToInterface(submitted)
   }
 
   // 3 Get students who have submitted
@@ -58,13 +53,18 @@ class AssignmentController(
     @PathVariable assignmentId: Int,
   ): List<SubmissionResponse> {
     return assignmentService.getSubmissionsByAssignment(assignmentId).map { submitted ->
-      SubmissionResponse(
-        fileName = submitted.fileName,
-        assignmentId = submitted.assignment.id,
-        assignmentName = submitted.assignment.file,
-        studentName = submitted.student.name,
-        submittedOn = submitted.submittedOn.format(FRONTEND_DATE_FORMAT)
-      )
+      assignmentConverter.convertSubmissionDtoToInterface(submitted)
+    }
+  }
+
+  // Get student's specific submission based on Assignment ID
+  @GetMapping("findSubmissionByStudentAndAssignmentId/{assignmentId}/{studentId}")
+  fun getSubmissionByStudentAndAssignmentId(
+    @PathVariable studentId: Int,
+    @PathVariable assignmentId: Int,
+  ): SubmissionResponse {
+    return assignmentService.getSubmissionByStudentIdAndAssignmentId(studentId, assignmentId).let { submitted ->
+      assignmentConverter.convertSubmissionDtoToInterface(submitted)
     }
   }
 }

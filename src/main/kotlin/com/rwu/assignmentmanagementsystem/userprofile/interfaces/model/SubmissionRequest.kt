@@ -1,6 +1,6 @@
 package com.rwu.assignmentmanagementsystem.userprofile.interfaces.model
 
-class SubmissionRequest(
+data class SubmissionRequest(
   val fileName: String,
   val comment: String,
   val studentId: Int,

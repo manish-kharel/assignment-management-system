@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface SubmissionRepository : JpaRepository<Submission, Int> {
 
   fun findSubmissionsByAssignment(assignment: Assignment): List<Submission>
+  fun findSubmissionByStudentIdAndAssignmentId(studentId : Int, assignmentId: Int) : Submission
 }

@@ -1,5 +1,6 @@
 package com.rwu.assignmentmanagementsystem.userprofile.application
 
+import com.rwu.assignmentmanagementsystem.FRONTEND_DATE_FORMAT
 import com.rwu.assignmentmanagementsystem.userprofile.application.converter.AssignmentConverter
 import com.rwu.assignmentmanagementsystem.userprofile.application.converter.UserProfileConverter
 import com.rwu.assignmentmanagementsystem.userprofile.application.model.AssignmentStatus
@@ -14,7 +15,6 @@ import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Assignmen
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionRequest
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import com.rwu.assignmentmanagementsystem.userprofile.application.model.Student as StudentDto
 
 @Component
@@ -70,8 +70,7 @@ class AssignmentService(
         comment = submissionRequest.comment,
         fileName = submissionRequest.fileName,
         submittedOn = LocalDateTime.parse(
-          submissionRequest.submittedOn,
-          DateTimeFormatter.ofPattern("dd.MM.yyyy.HH.mm")
+          submissionRequest.submittedOn, FRONTEND_DATE_FORMAT
         ),
         student = studentRepository.findById(submissionRequest.studentId).get(),
         assignment = assignmentRepository.findById(submissionRequest.assignmentId).get()
@@ -84,4 +83,10 @@ class AssignmentService(
     return submissionRepository.findSubmissionsByAssignment(assignment)
   }
 
+  fun getSubmissionByStudentIdAndAssignmentId(studentId: Int, assignmentId: Int): Submission {
+    return submissionRepository.findSubmissionByStudentIdAndAssignmentId(
+      studentId = studentId,
+      assignmentId = assignmentId
+    )
+  }
 }

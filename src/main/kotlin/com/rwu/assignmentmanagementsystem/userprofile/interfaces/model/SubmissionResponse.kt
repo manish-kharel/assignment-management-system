@@ -1,9 +1,10 @@
 package com.rwu.assignmentmanagementsystem.userprofile.interfaces.model
 
-class SubmissionResponse(
+data class SubmissionResponse(
+  val comment : String,
   val fileName: String,
   val assignmentId: Int,
   val assignmentName: String,
-  val studentName: String,
-  val submittedOn: String,
+  val student: Student,
+  val submittedOn: String?,
 )
