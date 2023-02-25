@@ -5,6 +5,7 @@ import com.rwu.assignmentmanagementsystem.userprofile.application.model.Authenti
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.LoginDetail
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.time.format.DateTimeFormatter
@@ -15,7 +16,7 @@ class AuthenticationController(
   private val authenticationService: AuthenticationService
 ) {
 
-  @GetMapping("/getAuthentication")
+  @PostMapping("/getAuthentication")
   fun getAuthentication(@RequestBody loginDetail: LoginDetail): AuthenticationResponse =
     authenticationService.getAuthentication(loginDetail.email, loginDetail.password)
 }
