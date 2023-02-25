@@ -6,6 +6,7 @@ import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Assignment
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionResponse
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@CrossOrigin
 class AssignmentController(
   private val assignmentService: AssignmentService
 ) {
