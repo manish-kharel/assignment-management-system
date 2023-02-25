@@ -3,7 +3,7 @@ package com.rwu.assignmentmanagementsystem.userprofile.application
 import com.rwu.assignmentmanagementsystem.exception.UserDoesNotExistException
 import com.rwu.assignmentmanagementsystem.userprofile.domain.ProfessorRepository
 import com.rwu.assignmentmanagementsystem.userprofile.domain.StudentRepository
-import com.rwu.assignmentmanagementsystem.userprofile.domain.model.AuthenticationResponse
+import com.rwu.assignmentmanagementsystem.userprofile.application.model.AuthenticationResponse
 import org.springframework.stereotype.Component
 
 @Component

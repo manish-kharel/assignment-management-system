@@ -1,4 +1,4 @@
-package com.rwu.assignmentmanagementsystem.userprofile.domain.model
+package com.rwu.assignmentmanagementsystem.userprofile.application.model
 
 class AuthenticationResponse(
   val valid : Boolean,

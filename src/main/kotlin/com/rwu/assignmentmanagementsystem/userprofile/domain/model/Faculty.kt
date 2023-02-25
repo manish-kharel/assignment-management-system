@@ -9,7 +9,8 @@ import jakarta.persistence.Id
 
 @Entity
 data class Faculty(
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int,
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  val id: Int? = null,
 
   @Enumerated(EnumType.STRING)
   val facultyName: FacultyName,

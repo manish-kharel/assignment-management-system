@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.Table
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 @Table
@@ -20,6 +22,9 @@ data class Assignment(
 
   val file: String,
 
+  val uploaded: LocalDate?,
+  val deadline: LocalDateTime?,
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
     name = "assignment_faculty",
@@ -27,4 +32,7 @@ data class Assignment(
     inverseJoinColumns = [JoinColumn(name = "faculty_id")]
   )
   var faculties: List<Faculty> = mutableListOf(),
+
+//  @Transient
+//  val graded : Boolean
 )
