@@ -5,10 +5,10 @@ import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Assignmen
 data class AssignmentStatus(
   val assignmentRequest: AssignmentRequest,
   val totalStudents: Int,
-  val totalSubmissions : Int,
-  val totalReviewsWritten : Int,
+  val totalSubmissions: Int,
+  val totalReviewsWritten: Int,
   val students: List<Student>,
-  val graded: Boolean = (totalSubmissions == totalReviewsWritten)
+  val graded: Boolean = (totalStudents == totalSubmissions && totalSubmissions == totalReviewsWritten)
 //  val uploaded : LocalDateTime
 //  val deadline : LocalDateTime
 //  val graded: Boolean

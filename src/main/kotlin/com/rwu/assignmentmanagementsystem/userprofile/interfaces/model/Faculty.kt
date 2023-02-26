@@ -3,7 +3,7 @@ package com.rwu.assignmentmanagementsystem.userprofile.interfaces.model
 
 data class Faculty(
   val facultyName: FacultyName,
-  val semesterNumber : Int,
+  val semester : Int,
 )
 
 enum class FacultyName {

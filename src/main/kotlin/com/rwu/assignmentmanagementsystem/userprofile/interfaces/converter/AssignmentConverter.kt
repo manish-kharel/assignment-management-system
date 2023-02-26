@@ -35,7 +35,7 @@ class AssignmentConverter {
         name = submitted.student.name,
         faculty = Faculty(
           facultyName = convertFacultyNameDtoToInterface(submitted.student.faculty.facultyName),
-          semesterNumber = submitted.student.faculty.id ?: 0,
+          semester = submitted.student.faculty.semester ?: 0,
         )
       ),
       submittedOn = submitted.submittedOn?.format(FRONTEND_DATE_FORMAT)
