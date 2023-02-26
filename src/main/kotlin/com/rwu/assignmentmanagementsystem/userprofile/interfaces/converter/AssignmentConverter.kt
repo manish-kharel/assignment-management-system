@@ -9,6 +9,7 @@ import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Assignmen
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Faculty
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.FacultyRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Student
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.StudentAssignmentStatus
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionResponse
 import org.springframework.stereotype.Component
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.FacultyName as InterfaceFacultyName
@@ -62,4 +63,15 @@ class AssignmentConverter {
       facultyName = it.facultyName.name,
       semester = it.semester
     )
+
+  fun convertAssignmentDtoToStudentAssignmentStatus(assignment: Assignment): StudentAssignmentStatus =
+    StudentAssignmentStatus(
+      id = assignment.id!!,
+      professorId = assignment.professorId,
+      fileName = assignment.fileName,
+      uploaded = assignment.uploaded,
+      deadline = assignment.deadline,
+      submitted = false,
+      grade = null
+      )
 }

@@ -45,12 +45,11 @@ class AssignmentController(
 
   //  for students page
 //  1. to get to-do assignments
-  @GetMapping("getAssignmentsForFaculty/{facultyId}")
+  @GetMapping("getAssignmentsForFaculty/{facultyId}/{studentId}")
   fun getAssignmentsForFaculty(
-    @PathVariable facultyId: Int
-  ) = assignmentService.getAssignmentsForFaculty(facultyId).map {
-    assignmentConverter.convertAssignmentDtoToInterface(it)
-  }
+    @PathVariable facultyId: Int,
+    @PathVariable studentId: Int,
+  ) = assignmentService.getAssignmentsForFaculty(facultyId, studentId)
 
   @GetMapping("downloadAssignmentFile/download/{id}")
   fun downloadAssignmentFile(

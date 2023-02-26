@@ -16,6 +16,7 @@ import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Review
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Submission
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.ReviewRequest
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.StudentAssignmentStatus
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
@@ -64,15 +65,21 @@ class AssignmentService(
         assignmentRequest = assignmentConverterInterface.convertAssignmentDtoToInterface(assignment),
         totalStudents = allStudentsDto.size, students = allStudentsDto,
         totalSubmissions = submissionRepository.countSubmissionsByAssignmentId(assignment.id!!),
-        totalReviewsWritten =  reviewRepository.countReviewsBySubmission_Assignment(assignment)
+        totalReviewsWritten = reviewRepository.countReviewsBySubmission_Assignment(assignment)
       )
     })
     return assignmentStatuses
   }
 
-  fun getAssignmentsForFaculty(facultyId: Int): List<Assignment> {
+  fun getAssignmentsForFaculty(facultyId: Int, studentId: Int): List<StudentAssignmentStatus> {
     val faculty = facultyRepository.findById(facultyId)
-    return assignmentRepository.findAllByFacultiesContaining(faculty)
+    return assignmentRepository.findAllByFacultiesContaining(faculty).map {
+      val submission = submissionRepository.findSubmissionByStudentIdAndAssignmentId(studentId, it.id!!)
+      assignmentConverterInterface.convertAssignmentDtoToStudentAssignmentStatus(it).copy(
+        submitted = (submission != null),
+        grade = reviewRepository.findBySubmissionId(submission?.id ?: 0)?.grade
+      )
+    }
   }
 
   fun createSubmissionForStudent(submissionRequest: SubmissionRequest): Submission {
@@ -96,7 +103,7 @@ class AssignmentService(
     return submissionRepository.findSubmissionByStudentIdAndAssignmentId(
       studentId = studentId,
       assignmentId = assignmentId
-    )
+    )!!
   }
 
   fun createReview(req: ReviewRequest): Review = reviewRepository.save(
@@ -107,7 +114,7 @@ class AssignmentService(
     )
   )
 
-  fun getReviewBySubmissionId(submissionId: Int): Review =
+  fun getReviewBySubmissionId(submissionId: Int): Review? =
     reviewRepository.findBySubmissionId(submissionId)
 
   fun downloadAssignmentFile(id: Int): ByteArray =
