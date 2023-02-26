@@ -1,21 +1,27 @@
 package com.rwu.assignmentmanagementsystem.userprofile.application
 
 import com.rwu.assignmentmanagementsystem.FRONTEND_DATE_FORMAT
+import com.rwu.assignmentmanagementsystem.FileUtils
 import com.rwu.assignmentmanagementsystem.userprofile.application.converter.AssignmentConverter
 import com.rwu.assignmentmanagementsystem.userprofile.application.converter.UserProfileConverter
 import com.rwu.assignmentmanagementsystem.userprofile.application.model.AssignmentStatus
 import com.rwu.assignmentmanagementsystem.userprofile.domain.AssignmentRepository
 import com.rwu.assignmentmanagementsystem.userprofile.domain.FacultyRepository
+import com.rwu.assignmentmanagementsystem.userprofile.domain.ReviewRepository
 import com.rwu.assignmentmanagementsystem.userprofile.domain.StudentRepository
 import com.rwu.assignmentmanagementsystem.userprofile.domain.SubmissionRepository
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Assignment
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Faculty
+import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Review
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Submission
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.ReviewRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionRequest
 import org.springframework.stereotype.Component
+import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDateTime
 import com.rwu.assignmentmanagementsystem.userprofile.application.model.Student as StudentDto
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.converter.AssignmentConverter as AssignmentConverterInterface
 
 @Component
 class AssignmentService(
@@ -23,18 +29,20 @@ class AssignmentService(
   private val facultyRepository: FacultyRepository,
   private val studentRepository: StudentRepository,
   private val submissionRepository: SubmissionRepository,
+  private val reviewRepository: ReviewRepository,
   private val userProfileConverter: UserProfileConverter,
   private val assignmentConverter: AssignmentConverter,
+  private val assignmentConverterInterface: AssignmentConverterInterface
 ) {
-  fun createAssignment(assignmentRequest: AssignmentRequest): Assignment {
+  fun createAssignment(assignmentRequest: AssignmentRequest, file: MultipartFile): Assignment {
     val assignment = assignmentConverter.convertAssignmentRequestToDomain(assignmentRequest)
     val mappedFaculties = assignment.faculties.mapNotNull { faculty ->
       mapFacultyWithCorrectId(faculty)
     }
-
     return assignmentRepository.save(
       assignment.copy(
         faculties = mappedFaculties,
+        file = FileUtils.compressImage(file.bytes)
       )
     )
   }
@@ -53,7 +61,10 @@ class AssignmentService(
         userProfileConverter.convertStudentDomainToDto(allStudents).forEach { allStudentsDto.add(it) }
       }
       AssignmentStatus(
-        assignment = assignment, totalStudents = allStudentsDto.size, students = allStudentsDto
+        assignmentRequest = assignmentConverterInterface.convertAssignmentDtoToInterface(assignment),
+        totalStudents = allStudentsDto.size, students = allStudentsDto,
+        totalSubmissions = submissionRepository.countSubmissionsByAssignmentId(assignment.id!!),
+        totalReviewsWritten =  reviewRepository.countReviewsBySubmission_Assignment(assignment)
       )
     })
     return assignmentStatuses
@@ -69,9 +80,7 @@ class AssignmentService(
       Submission(
         comment = submissionRequest.comment,
         fileName = submissionRequest.fileName,
-        submittedOn = LocalDateTime.parse(
-          submissionRequest.submittedOn, FRONTEND_DATE_FORMAT
-        ),
+        submittedOn = LocalDateTime.parse(LocalDateTime.now().format(FRONTEND_DATE_FORMAT), FRONTEND_DATE_FORMAT),
         student = studentRepository.findById(submissionRequest.studentId).get(),
         assignment = assignmentRepository.findById(submissionRequest.assignmentId).get()
       )
@@ -89,4 +98,19 @@ class AssignmentService(
       assignmentId = assignmentId
     )
   }
+
+  fun createReview(req: ReviewRequest): Review = reviewRepository.save(
+    Review(
+      review = req.review,
+      grade = req.grade,
+      submission = submissionRepository.findById(req.submissionId).get(),
+    )
+  )
+
+  fun getReviewBySubmissionId(submissionId: Int): Review =
+    reviewRepository.findBySubmissionId(submissionId)
+
+  fun downloadAssignmentFile(id: Int): ByteArray =
+    assignmentRepository.downloadFile(id) ?: byteArrayOf()
+
 }

@@ -5,5 +5,5 @@ data class SubmissionRequest(
   val comment: String,
   val studentId: Int,
   val assignmentId: Int,
-  val submittedOn: String,
+  val submittedOn: String?,
 )

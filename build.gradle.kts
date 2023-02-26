@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+  id("java")
   id("org.springframework.boot") version "3.0.2"
   id("io.spring.dependency-management") version "1.1.0"
   kotlin("jvm") version "1.7.22"
@@ -8,9 +9,9 @@ plugins {
   kotlin("plugin.jpa") version "1.7.22"
 }
 
-noArg { annotation("com.aoe.alloypricecalculator") }
+noArg { annotation("com.rwu.assignmentmanagementsystem") }
 allOpen {
-  annotation("com.aoe.alloypricecalculator")
+  annotation("com.rwu.assignmentmanagementsystem")
 }
 
 group = "com.rwu"
@@ -49,19 +50,21 @@ dependencies {
 //  implementation("org.ehcache:ehcache")
 //  implementation("javax.cache:cache-api")}
 }
-  dependencyManagement {
-    imports {
-      mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
+dependencyManagement {
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
   }
+}
 
-  tasks.withType<KotlinCompile> {
-    kotlinOptions {
-      freeCompilerArgs = listOf("-Xjsr305=strict")
-      jvmTarget = "17"
-    }
-  }
 
-  tasks.withType<Test> {
-    useJUnitPlatform()
+
+tasks.withType<KotlinCompile> {
+  kotlinOptions {
+    freeCompilerArgs = listOf("-Xjsr305=strict")
+    jvmTarget = "17"
   }
+}
+
+tasks.withType<Test> {
+  useJUnitPlatform()
+}

@@ -1,12 +1,15 @@
 package com.rwu.assignmentmanagementsystem.userprofile.application.model
 
-import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Assignment
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
 
 data class AssignmentStatus(
-  val assignment: Assignment,
+  val assignmentRequest: AssignmentRequest,
   val totalStudents: Int,
-  val students: List<Student>
+  val totalSubmissions : Int,
+  val totalReviewsWritten : Int,
+  val students: List<Student>,
+  val graded: Boolean = (totalSubmissions == totalReviewsWritten)
 //  val uploaded : LocalDateTime
-// val deadline : LocalDateTime
+//  val deadline : LocalDateTime
 //  val graded: Boolean
 )

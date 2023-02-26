@@ -9,14 +9,13 @@ import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.FacultyRe
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Component
 class AssignmentConverter {
   fun convertAssignmentRequestToDomain(assignmentRequest: AssignmentRequest): Assignment = Assignment(
     id = assignmentRequest.id,
     professorId = assignmentRequest.professorId,
-    file = assignmentRequest.file,
+    fileName = assignmentRequest.fileName,
     uploaded = LocalDate.now(),
     deadline = LocalDateTime.parse(assignmentRequest.deadline, FRONTEND_DATE_FORMAT),
     faculties = assignmentRequest.faculties.map { faculty ->
@@ -37,6 +36,4 @@ class AssignmentConverter {
     "INFORMATION_TECHNOLOGY" -> FacultyName.INFORMATION_TECHNOLOGY
     else -> FacultyName.UNSPECIFIED
   }
-
-
 }

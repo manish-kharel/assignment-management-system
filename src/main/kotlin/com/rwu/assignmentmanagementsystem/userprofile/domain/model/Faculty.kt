@@ -15,12 +15,6 @@ data class Faculty(
   @Enumerated(EnumType.STRING)
   val facultyName: FacultyName,
   val semester: Int,
-
-//  @ManyToMany(mappedBy = "faculties")
-//  var professors: MutableSet<Professor> = mutableSetOf(),
-
-//  @OneToMany(mappedBy = "faculty", cascade = [CascadeType.ALL])
-//  var students: MutableSet<Student> = mutableSetOf()
 )
 
 
