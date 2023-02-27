@@ -1,5 +1,6 @@
 package com.rwu.assignmentmanagementsystem.userprofile.interfaces
 
+import com.rwu.assignmentmanagementsystem.createSlf4jLogger
 import com.rwu.assignmentmanagementsystem.userprofile.application.AssignmentService
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.converter.AssignmentConverter
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile
 class AssignmentController(
   private val assignmentService: AssignmentService, private val assignmentConverter: AssignmentConverter
 ) {
+  val logger = createSlf4jLogger()
 
   //For professors page
   // 1. to upload assignment
@@ -33,8 +35,11 @@ class AssignmentController(
   fun createAssignment(
     @RequestPart file: MultipartFile,
     @RequestPart assignmentRequest: AssignmentRequest,
-  ): AssignmentRequest = assignmentService.createAssignment(assignmentRequest, file).let {
-    assignmentConverter.convertAssignmentDtoToInterface(it)
+  ): AssignmentRequest   {
+    logger.info(assignmentRequest.fileName + "  file received")
+    return assignmentService.createAssignment(assignmentRequest, file).let {
+      assignmentConverter.convertAssignmentDtoToInterface(it)
+    }
   }
 
   // 2. to get Assignment current status for professor,

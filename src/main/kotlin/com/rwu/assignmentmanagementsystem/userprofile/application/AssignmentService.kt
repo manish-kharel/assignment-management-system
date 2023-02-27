@@ -2,6 +2,7 @@ package com.rwu.assignmentmanagementsystem.userprofile.application
 
 import com.rwu.assignmentmanagementsystem.FRONTEND_DATE_FORMAT
 import com.rwu.assignmentmanagementsystem.FileUtils
+import com.rwu.assignmentmanagementsystem.createSlf4jLogger
 import com.rwu.assignmentmanagementsystem.userprofile.application.converter.AssignmentConverter
 import com.rwu.assignmentmanagementsystem.userprofile.application.converter.UserProfileConverter
 import com.rwu.assignmentmanagementsystem.userprofile.application.model.AssignmentStatus
@@ -36,6 +37,7 @@ class AssignmentService(
   private val assignmentConverterInterface: AssignmentConverterInterface
 ) {
   fun createAssignment(assignmentRequest: AssignmentRequest, file: MultipartFile): Assignment {
+    val logger = createSlf4jLogger()
     val assignment = assignmentConverter.convertAssignmentRequestToDomain(assignmentRequest)
     val mappedFaculties = assignment.faculties.mapNotNull { faculty ->
       mapFacultyWithCorrectId(faculty)
@@ -45,7 +47,9 @@ class AssignmentService(
         faculties = mappedFaculties,
         file = FileUtils.compressImage(file.bytes)
       )
-    )
+    ).also {
+      logger.info("file saved")
+    }
   }
 
   private fun mapFacultyWithCorrectId(faculty: Faculty) =
