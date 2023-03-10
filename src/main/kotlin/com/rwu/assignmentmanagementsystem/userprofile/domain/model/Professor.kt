@@ -27,6 +27,4 @@ data class Professor(
     inverseJoinColumns = [JoinColumn(name = "faculty_id")]
   )
   var faculties: MutableSet<Faculty> = mutableSetOf(),
-
-
 )

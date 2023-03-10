@@ -38,7 +38,4 @@ data class Assignment(
     inverseJoinColumns = [JoinColumn(name = "faculty_id")]
   )
   var faculties: List<Faculty> = mutableListOf(),
-
-//  @Transient
-//  val graded : Boolean
 )

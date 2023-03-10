@@ -23,7 +23,8 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @CrossOrigin
 class AssignmentController(
-  private val assignmentService: AssignmentService, private val assignmentConverter: AssignmentConverter
+  private val assignmentService: AssignmentService,
+  private val assignmentConverter: AssignmentConverter
 ) {
   val logger = createSlf4jLogger()
 
@@ -35,7 +36,7 @@ class AssignmentController(
   fun createAssignment(
     @RequestPart file: MultipartFile,
     @RequestPart assignmentRequest: AssignmentRequest,
-  ): AssignmentRequest   {
+  ): AssignmentRequest {
     logger.info(assignmentRequest.fileName + "  file received")
     return assignmentService.createAssignment(assignmentRequest, file).let {
       assignmentConverter.convertAssignmentDtoToInterface(it)
