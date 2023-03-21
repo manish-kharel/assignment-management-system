@@ -4,10 +4,12 @@ import com.rwu.assignmentmanagementsystem.FRONTEND_DATE_FORMAT
 import com.rwu.assignmentmanagementsystem.FileUtils
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Assignment
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.FacultyName
+import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Review
 import com.rwu.assignmentmanagementsystem.userprofile.domain.model.Submission
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.AssignmentRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Faculty
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.FacultyRequest
+import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.ReviewRequest
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.Student
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.StudentAssignmentStatus
 import com.rwu.assignmentmanagementsystem.userprofile.interfaces.model.SubmissionResponse
@@ -73,5 +75,11 @@ class AssignmentConverter {
       deadline = assignment.deadline,
       submitted = false,
       grade = null
-      )
+    )
+
+  fun convertReviewToReviewRequest(it: Review?, submissionId : Int): ReviewRequest = ReviewRequest(
+    review = it?.review,
+    grade = it?.grade,
+    submissionId = submissionId
+  )
 }
