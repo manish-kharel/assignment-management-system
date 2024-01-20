@@ -10,3 +10,5 @@ class AssignmentManagementSystemApplication
 fun main(args: Array<String>) {
   runApplication<AssignmentManagementSystemApplication>(*args)
 }
+
+
