@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  ams:
+    image: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ams
+      MYSQL_USER: ams
+      MYSQL_PASSWORD: ams
+      MYSQL_ROOT_PASSWORD: ams
